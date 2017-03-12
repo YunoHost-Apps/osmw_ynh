@@ -1,6 +1,6 @@
 {
-    "name": "umap",
-    "id": "umap",
+    "name": "osmw",
+    "id": "osmw",
     "packaging_format": 1,
     "requirements": {
         "yunohost": ">> 2.3.15"
@@ -8,8 +8,8 @@
     "description": {
         "fr": "Logiciel libre de cartographie"
     },
-    "url": "https://umap.openstreetmap.fr/",
-    "license": "AGPLv3",
+    "url": "https://www.openstreetmap.org/",
+    "license": "GPLv3",
     "maintainer": {
         "name": "frju365",
         "email": "win10@tutanota.com"
@@ -37,8 +37,8 @@
                     "en": "Choose a path for umap",
                     "fr": "Choisissez un chemin pour umap"
                 },
-                "example": "/umap",
-                "default": "/umap"
+                "example": "/osmw",
+                "default": "/osmw"
             },
             {
                 "name": "is_public",
