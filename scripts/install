@@ -32,7 +32,7 @@ sudo apt-get update
 
 # Install dependency to convert tracks to a readable format for the browser
 sudo apt-get update
-sudo apt-get -t stretch -y install ruby2.3 libruby2.3 ruby2.3-dev \
+sudo apt-get -t stretch -yy -qq install ruby2.3 libruby2.3 ruby2.3-dev \
                      libmagickwand-dev libxml2-dev libxslt1-dev nodejs \
                      build-essential git-core \
                      postgresql postgresql-contrib libpq-dev postgresql-server-dev-all \
