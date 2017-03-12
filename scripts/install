@@ -38,7 +38,7 @@ sudo gem install bundler
 sudo mkdir /srv
 sudo git clone https://github.com/openstreetmap/openstreetmap-website.git /srv/$app
 pushd /srv/$app
-bundle install
+sudo bundle install
 popd
 
 
