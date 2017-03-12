@@ -34,10 +34,6 @@ sudo apt-get install -y -qq ruby libruby ruby-dev \
                      libsasl2-dev imagemagick
 sudo gem install bundler
 
-# Start Postgresql
-sudo postgresql-setup initdb
-sudo systemctl start postgresql.service
-
 # Prepare Umap to be installed
 sudo mkdir /srv
 sudo git clone https://github.com/openstreetmap/openstreetmap-website.git /srv/$app
