@@ -45,30 +45,49 @@ pushd /srv/$app
 bundle install
 popd
 
-cp ./conf/application.yml /srv/${app}/config/application.yml
-cp ./conf/database.yml /srv/${app}/config/database.yml
+
+# Setting up the database
+dbname=$app
+dbuser=$app
+
+# Generate random password
+dbpass=$(ynh_string_random)
+##### dbpass
+ynh_psql_create_db "$dbname" "$dbuser" "$dbpass"
+
+
+sed -i "s@DBNAME@$dbname@g" ../conf/database.yml
+sed -i "s@DBUSER@$dbuser@g" ../conf/database.yml
+sed -i "s@DBPASS@$dbpass@g" ../conf/database.yml
+sed -i "s@SERVER_URL@https://$domain$path@g" ../conf/application.yml
+
+sudo cp ./conf/application.yml /srv/${app}/config/application.yml
+sudo cp ./conf/database.yml /srv/${app}/config/database.yml
 
 sudo -u postgres -i
 createuser -s <username>
 exit
 
 pushd /srv/$app
-bundle exec rake db:create
-psql -d openstreetmap -c "CREATE EXTENSION btree_gist"
+sudo bundle exec rake db:create
+sudo psql -d openstreetmap -c "CREATE EXTENSION btree_gist"
 
 cd db/functions
-make libpgosm.so
+sudo make libpgosm.so
 cd ../..
 
-psql -d openstreetmap -c "CREATE FUNCTION maptile_for_point(int8, int8, int4) RETURNS int4 AS '`pwd`/db/functions/libpgosm', 'maptile_for_point' LANGUAGE C STRICT"
-psql -d openstreetmap -c "CREATE FUNCTION tile_for_point(int4, int4) RETURNS int8 AS '`pwd`/db/functions/libpgosm', 'tile_for_point' LANGUAGE C STRICT"
-psql -d openstreetmap -c "CREATE FUNCTION xid_to_int4(xid) RETURNS int4 AS '`pwd`/db/functions/libpgosm', 'xid_to_int4' LANGUAGE C STRICT"
+sudo psql -d openstreetmap -c "CREATE FUNCTION maptile_for_point(int8, int8, int4) RETURNS int4 AS '`pwd`/db/functions/libpgosm', 'maptile_for_point' LANGUAGE C STRICT"
+sudo psql -d openstreetmap -c "CREATE FUNCTION tile_for_point(int4, int4) RETURNS int8 AS '`pwd`/db/functions/libpgosm', 'tile_for_point' LANGUAGE C STRICT"
+sudo psql -d openstreetmap -c "CREATE FUNCTION xid_to_int4(xid) RETURNS int4 AS '`pwd`/db/functions/libpgosm', 'xid_to_int4' LANGUAGE C STRICT"
 
-bundle exec rake db:migrate
-bundle exec rake test:db
+sudo bundle exec rake db:migrate
+sudo bundle exec rake test:db
 
- service osmw enable
- service osmw start
+sudo yunohost firewall allow Both 3000
+pre_inst_osmw
+
+sudo service osmw enable
+sudo service osmw start
  
 
 # Modify Nginx configuration file and copy it to Nginx conf directory
