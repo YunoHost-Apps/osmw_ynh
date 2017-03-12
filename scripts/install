@@ -27,7 +27,7 @@ CHECK_FINALPATH	# Vérifie que le dossier de destination n'est pas déjà utilis
 
 # Install dependency to convert tracks to a readable format for the browser
 sudo apt-get update
-sudo apt-get install ruby2.3 libruby2.3 ruby2.3-dev \
+sudo apt-get install -y -qq ruby2.3 libruby2.3 ruby2.3-dev \
                      libmagickwand-dev libxml2-dev libxslt1-dev nodejs \
                      apache2 apache2-dev build-essential git-core \
                      postgresql postgresql-contrib libpq-dev postgresql-server-dev-all \
