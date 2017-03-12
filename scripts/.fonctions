@@ -71,3 +71,15 @@ ynh_psql_drop_db() {
 ynh_psql_drop_user() {
     sudo su -c "dropuser ${1}" postgres
 }
+
+pre_inst_osmw() {
+  # Add user if not exist
+  id -g "$app" &>/dev/null || sudo addgroup "$app" --system --quiet
+  id -u "$app" &>/dev/null || sudo adduser "$app" \
+      --ingroup "$app" --system --quiet --shell /bin/bash
+
+  # Configure init script
+  sudo cp ../conf/"$app".service /etc/systemd/system/
+  sudo systemctl daemon-reload
+  sudo systemctl enable "$app".service
+}
