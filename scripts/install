@@ -26,13 +26,18 @@ CHECK_DOMAINPATH	# Vérifie la disponibilité du path et du domaine.
 CHECK_FINALPATH	# Vérifie que le dossier de destination n'est pas déjà utilisé.
 
 # Install dependency to convert tracks to a readable format for the browser
+sudo cp -a ../conf/umap.list /etc/apt/sources.list.d/
 sudo apt-get update
-sudo apt-get install -y -qq ruby libruby ruby-dev \
+
+
+# Install dependency to convert tracks to a readable format for the browser
+sudo apt-get update
+sudo apt-get -t stretch -y install ruby2.3 libruby2.3 ruby2.3-dev \
                      libmagickwand-dev libxml2-dev libxslt1-dev nodejs \
                      build-essential git-core \
                      postgresql postgresql-contrib libpq-dev postgresql-server-dev-all \
                      libsasl2-dev imagemagick
-sudo gem install bundler
+sudo gem2.3 install bundler
 
 # Prepare Umap to be installed
 sudo git clone https://github.com/openstreetmap/openstreetmap-website.git /srv/$app
