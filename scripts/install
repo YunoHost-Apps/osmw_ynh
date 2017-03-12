@@ -35,7 +35,6 @@ sudo apt-get install -y -qq ruby libruby ruby-dev \
 sudo gem install bundler
 
 # Prepare Umap to be installed
-sudo mkdir /srv
 sudo git clone https://github.com/openstreetmap/openstreetmap-website.git /srv/$app
 pushd /srv/$app
 sudo bundle install
