@@ -26,18 +26,20 @@ CHECK_DOMAINPATH	# Vérifie la disponibilité du path et du domaine.
 CHECK_FINALPATH	# Vérifie que le dossier de destination n'est pas déjà utilisé.
 
 # Install dependency to convert tracks to a readable format for the browser
-sudo cp -a ../conf/osmw.list /etc/apt/sources.list.d/
-sudo apt-get update
+sudo gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+sudo curl -sSL https://get.rvm.io | sudo bash -s stable
+
 
 
 # Install dependency to convert tracks to a readable format for the browser
 sudo apt-get update
-sudo apt-get -t stretch -yy -qq install ruby2.3 libruby2.3 ruby2.3-dev \
+sudo apt-get -yy -qq install  \
                      libmagickwand-dev libxml2-dev libxslt1-dev nodejs \
                      build-essential git-core \
                      postgresql postgresql-contrib libpq-dev postgresql-server-dev-all \
                      libsasl2-dev imagemagick
-sudo gem2.3 install bundler
+sudo rvm install 2.3
+sudo gem install bundler
 
 # Prepare Umap to be installed
 sudo git clone https://github.com/openstreetmap/openstreetmap-website.git /srv/$app
@@ -49,24 +51,24 @@ popd
 # Setting up the database
 dbname=$app
 dbuser=$app
-
-# Generate random password
 dbpass=$(ynh_string_random)
-##### dbpass
 ynh_psql_create_db "$dbname" "$dbuser" "$dbpass"
-
+ynh_app_setting_set "$app" db_name "$db_name"
+ynh_app_setting_set "$app" db_pass "$db_pass"
+ynh_app_setting_set "$app" db_user "$db_user"
 
 sed -i "s@DBNAME@$dbname@g" ../conf/database.yml
 sed -i "s@DBUSER@$dbuser@g" ../conf/database.yml
 sed -i "s@DBPASS@$dbpass@g" ../conf/database.yml
 sed -i "s@SERVER_URL@https://$domain$path@g" ../conf/application.yml
 
+# Conf of the app
+
 sudo cp ./conf/application.yml /srv/${app}/config/application.yml
 sudo cp ./conf/database.yml /srv/${app}/config/database.yml
 
-sudo -u postgres -i
-createuser -s <username>
-exit
+sudo -u postgres -i <<< \
+   createuser -s $app
 
 pushd /srv/$app
 sudo bundle exec rake db:create
