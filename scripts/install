@@ -38,6 +38,7 @@ sudo apt-get -yy -qq install  \
                      build-essential git-core \
                      postgresql postgresql-contrib libpq-dev postgresql-server-dev-all \
                      libsasl2-dev imagemagick
+source /etc/profile.d/rvm.sh
 sudo rvm install 2.3
 sudo gem install bundler
 
